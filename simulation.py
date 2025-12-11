@@ -1,2 +1,6 @@
-import pytorch as torch
+'''Installing Dependencies'''
+import torch
 import matplotlib.pyplot as plt
+import numpy as np
+
+
