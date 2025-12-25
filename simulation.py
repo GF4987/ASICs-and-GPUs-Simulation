@@ -146,13 +146,53 @@ def plot_energy_comp(results, model_name):
     plt.tight_layout()
     plt.show()
     
-'''Main Function'''
+def plot_mac_comparison(model_names, input_shape=(1,3,224,224)):
+    mac_counts = []
 
+    for name in model_names:
+        model = get_model(name)
+        example_input = torch.randn(input_shape)
+        macs_dict = profile_model(model, example_input)
+        total_macs = sum(macs_dict.values())
+        mac_counts.append(total_macs)
+
+    # Plot
+    plt.figure(figsize=(8,5))
+    plt.bar(model_names, mac_counts)
+    plt.ylabel("Total MACs per Inference")
+    plt.title("MAC Count Comparison Across Models")
+    plt.yscale("log")  # MAC counts span orders of magnitude
+    plt.tight_layout()
+    plt.show()
+
+    
+'''Model Selection'''
+def get_model(model_name):
+    model_name = model_name.lower()
+    
+    if model_name == 'resnet18':
+        return models.resnet18(weights=None)
+    elif model_name == 'mobilenet_v2':
+        return models.mobilenet_v2(weights=None)
+    elif model_name == 'vgg16':
+        return models.vgg16(weights=None)
+    elif model_name == 'alexnet':
+        return models.alexnet(weights=None)
+    elif model_name == 'squeezenet':
+        return models.squeezenet1_0(weights=None)
+    else:
+        raise ValueError("Unsupported model name. Choose from resnet18, mobilenet_v2, vgg16, alexnet, squeezenet.")
+    
+
+'''Main Function'''
 def main():
-    model = models.resnet18(weights=None)
+    model_name = 'googoogagaga'
+    model = get_model(model_name)
+    
     results = analyze_model(model)
 
     print("\n=== Tiny ASIC Compiler Results ===")
+    print(f"Model: {model_name}")
     print("Total MACs:", f"{results['total_macs']:,}")
 
     print("\nGPU:")
