@@ -149,7 +149,7 @@ def plot_energy_comp(results, model_name):
 '''Main Function'''
 
 def main():
-    model = models.resnet18(pretrained=False)
+    model = models.resnet18(weights=None)
     results = analyze_model(model)
 
     print("\n=== Tiny ASIC Compiler Results ===")
