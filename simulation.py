@@ -90,8 +90,7 @@ def compute_energy(macs, mac_per_joule, dram_words, dram_joules, carbon_factor):
 
 def analyze_model(model, input_shape=(1,3,224,224), batch_size = 1):
     #Analyze the model for both GPU and ASIC
-    
-    example_input = torch.randn(input_shape)
+    example_input = torch.randn(batch_size, *input_shape[1:])
     macs_dict = profile_model(model, example_input)
     
     total_macs = sum(macs_dict.values())
@@ -150,34 +149,21 @@ def plot_energy_comp(results, model_name):
 '''Main Function'''
 
 def main():
-    parser = argparse.Argpasrer(description="Tiny ASIC Compiler and Energy Simulation")
-    parser.add_argument('--model', type=str, default='resnet18', help='resnet18 | mobilenet_v2')
-    args = parser.parse_args()
-    
-    if args.model == 'resnet18':
-        model = models.resnet18(pretrained=False)
-    elif args.model == 'mobilenet_v2':
-        model = models.mobilenet_v2(pretrained=False)
-    else:
-        raise ValueError("Unsupported model. Choose 'resnet18' or 'mobilenet_v2'")
-    
+    model = models.resnet18(pretrained=False)
     results = analyze_model(model)
-    
+
     print("\n=== Tiny ASIC Compiler Results ===")
-    print(f"Model: {args.model}")
-    print(f"Total MACs: {results['total_macs']}")
-    
-    print("\n-- GPU Analysis ---")
-    print(f" Energy (J): {results['gpu']['energy_joules']:.6f}")
-    print(f" CO2 (kg): {results['gpu']['co2_kg']:.6f}")
-    
-    print("\n-- ASIC Analysis ---")
-    print(f" Energy (J): {results['asic']['energy_joules']:.6f}")
-    print(f" CO2 (kg): {results['asic']['co2_kg']:.6f}")
-    
-    plot_energy_comp(results, args.model)
-    
-    if __name__ == "__main__":
-        main()
+    print("Total MACs:", f"{results['total_macs']:,}")
+
+    print("\nGPU:")
+    print(" Energy (J):", results["gpu"]["energy_joules"])
+    print(" CO2 (kg):", results["gpu"]["co2_kg"])
+
+    print("\nASIC:")
+    print(" Energy (J):", results["asic"]["energy_joules"])
+    print(" CO2 (kg):", results["asic"]["co2_kg"])
+
+main()
+
     
 
