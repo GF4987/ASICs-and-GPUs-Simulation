@@ -1,4 +1,5 @@
 '''Installing Dependencies'''
+from litellm import model_list
 import torch
 import torch.nn as nn
 import torchvision.models as models
@@ -183,12 +184,29 @@ def get_model(model_name):
     else:
         raise ValueError("Unsupported model name. Choose from resnet18, mobilenet_v2, vgg16, alexnet, squeezenet.")
     
+'''User-Choice for Model Analysis'''
+def run_single_model():
+    print("\nChoose a model:")
+    print("  1 - resnet18")
+    print("  2 - mobilenet_v2")
+    print("  3 - alexnet")
+    print("  4 - squeezenet")
 
-'''Main Function'''
-def main():
-    model_name = 'googoogagaga'
+    choice = input("Enter number: ").strip()
+
+    model_map = {
+        "1": "resnet18",
+        "2": "mobilenet_v2",
+        "3": "alexnet",
+        "4": "squeezenet"
+    }
+
+    if choice not in model_map:
+        raise ValueError("Invalid selection.")
+
+    model_name = model_map[choice]
     model = get_model(model_name)
-    
+
     results = analyze_model(model)
 
     print("\n=== Tiny ASIC Compiler Results ===")
@@ -202,6 +220,12 @@ def main():
     print("\nASIC:")
     print(" Energy (J):", results["asic"]["energy_joules"])
     print(" CO2 (kg):", results["asic"]["co2_kg"])
+
+
+'''Main Function'''
+def main():
+    model_list = ["resnet18", "mobilenet_v2", "alexnet", "squeezenet"]
+    plot_mac_comparison(model_list)
 
 main()
 
