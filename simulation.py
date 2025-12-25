@@ -165,8 +165,34 @@ def plot_mac_comparison(model_names, input_shape=(1,3,224,224)):
     plt.yscale("log")  # MAC counts span orders of magnitude
     plt.tight_layout()
     plt.show()
-
     
+def plot_energy_comparison(model_names, input_shape=(1,3,224,224)):
+    gpu_energy = []
+    asic_energy = []
+
+    for name in model_names:
+        model = get_model(name)
+        results = analyze_model(model, input_shape)
+
+        gpu_energy.append(results["gpu"]["energy_joules"])
+        asic_energy.append(results["asic"]["energy_joules"])
+
+    x = range(len(model_names))
+    width = 0.35
+
+    plt.figure(figsize=(9,5))
+    plt.bar(x, gpu_energy, width, label="GPU")
+    plt.bar([i + width for i in x], asic_energy, width, label="ASIC")
+
+    plt.xticks([i + width / 2 for i in x], model_names)
+    plt.ylabel("Energy per Inference (J)")
+    plt.title("GPU vs ASIC Energy per Inference Across Models")
+    plt.yscale("log")
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
+
 '''Model Selection'''
 def get_model(model_name):
     model_name = model_name.lower()
@@ -225,7 +251,7 @@ def run_single_model():
 '''Main Function'''
 def main():
     model_list = ["resnet18", "mobilenet_v2", "alexnet", "squeezenet"]
-    plot_mac_comparison(model_list)
+    plot_energy_comparison(model_list)
 
 main()
 
