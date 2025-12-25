@@ -34,7 +34,7 @@ def count_layer_macs(layer, x, y):
         in_c = layer.in_channels
         out_c = layer.out_channels
         kh, kw = layer.kernel_size
-        oh, ow = y.shape[2:], y.shape[3]
+        oh, ow = y.shape[2], y.shape[3]
         batch = y.shape[0]
         
         #MACs per pixel output (in_c = kh * kw)
@@ -121,7 +121,63 @@ def analyze_model(model, input_shape=(1,3,224,224), batch_size = 1):
     return results
 
         
-        
-        
+'''Visualization Function'''
+def plot_energy_comp(results, model_name):
+    labels = ['GPU', 'ASIC']
+    energy = [
+        results['gpu']['energy_joules'],
+        results['asic']['energy_joules']
+    ]
+    
+    co2 = [
+        results['gpu']['co2_kg'],
+        results['asic']['co2_kg']
+    ]
+    
+    fig, ax = plt.subplots(1, 2, figsize = (12, 5))
+    
+    ax[0].bar(labels, energy, color=['blue', 'green'])
+    ax[0].set_title(f"Energy Consumption for {model_name}")
+    ax[0].set_ylabel("Energy (Joules)")
+    
+    ax[1].bar(labels, co2, color=['blue', 'green'])
+    ax[1].set_title(f"CO2 Emissions for {model_name}")
+    ax[1].set_ylabel("CO2 (kg)")
+    
+    plt.tight_layout()
+    plt.show()
+    
+'''Main Function'''
 
+def main():
+    parser = argparse.Argpasrer(description="Tiny ASIC Compiler and Energy Simulation")
+    parser.add_argument('--model', type=str, default='resnet18', help='resnet18 | mobilenet_v2')
+    args = parser.parse_args()
+    
+    if args.model == 'resnet18':
+        model = models.resnet18(pretrained=False)
+    elif args.model == 'mobilenet_v2':
+        model = models.mobilenet_v2(pretrained=False)
+    else:
+        raise ValueError("Unsupported model. Choose 'resnet18' or 'mobilenet_v2'")
+    
+    results = analyze_model(model)
+    
+    print("\n=== Tiny ASIC Compiler Results ===")
+    print(f"Model: {args.model}")
+    print(f"Total MACs: {results['total_macs']}")
+    
+    print("\n-- GPU Analysis ---")
+    print(f" Energy (J): {results['gpu']['energy_joules']:.6f}")
+    print(f" CO2 (kg): {results['gpu']['co2_kg']:.6f}")
+    
+    print("\n-- ASIC Analysis ---")
+    print(f" Energy (J): {results['asic']['energy_joules']:.6f}")
+    print(f" CO2 (kg): {results['asic']['co2_kg']:.6f}")
+    
+    plot_energy_comp(results, args.model)
+    
+    if __name__ == "__main__":
+        main()
+    
 
