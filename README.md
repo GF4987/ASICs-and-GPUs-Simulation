@@ -133,4 +133,3 @@ If you use this simulator or build upon this research, please cite:
   publisher = {Purdue University Undergraduate Research Expo}
 }
 ```
-```
