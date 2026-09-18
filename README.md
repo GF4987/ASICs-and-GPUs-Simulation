@@ -132,4 +132,3 @@ If you use this simulator or build upon this research, please cite:
   year = {2025},
   publisher = {Purdue University Undergraduate Research Expo}
 }
-```
