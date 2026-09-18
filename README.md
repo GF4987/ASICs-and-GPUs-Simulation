@@ -1,4 +1,3 @@
-``markdown
 # ASIC vs. GPU Data Center Energy & Performance Simulator
 
 [![Purdue Expo Award](https://img.shields.io/badge/Award-Presentation%20with%20Distinction-gold.svg)](#research-context)
