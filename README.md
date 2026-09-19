@@ -7,7 +7,7 @@
 An automated Python-based benchmarking tool designed to model, simulate, and compare Multiply-Accumulate (MAC) energy outputs, execution latency, and chip area utilization across domain-specific ASICs vs. enterprise GPUs running machine learning workloads.
 
 > **Research Context:** This project was developed as part of an undergraduate research initiative at Purdue University studying data center hardware sustainability. The work earned a **Presentation with Distinction** at the Purdue Fall Undergraduate Research Expo. A link to the Medium article on the research can be found here along with the research paper itself titled "Greener Data Centers: How Custom Chips Can Power Sustainable AI and Blockchain Systems".
-[Medium Article: Greener Data-Centers] (https://medium.com/@sarathivelmurugan73/greener-data-centers-how-custom-chips-could-power-a-sustainable-future-for-ai-and-blockchain-665fa58ab6e6)
+[Medium Article: Greener Data-Centers](https://medium.com/@sarathivelmurugan73/greener-data-centers-how-custom-chips-could-power-a-sustainable-future-for-ai-and-blockchain-665fa58ab6e6)
 
 ---
 
